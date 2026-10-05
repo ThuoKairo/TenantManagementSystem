@@ -1,37 +1,29 @@
-# Tenant Management System — Lesson 6 Practical
+Project Overview
 
-**Course:** BBT 3.2: Mobile Application Development  
-**Language:** Kotlin  
-**Topic:** Building the Tenant Management Screen (ConstraintLayout, View Binding, Data Binding)
+The Tenant Management System is an Android application. It demonstrates how to build a reactive Add Tenant form in Android using modern Jetpack architectural concepts: ConstraintLayout, View Binding and Data Binding.
 
 ---
 
-## 📱 Project Overview
+Features Implemented
 
-The **Tenant Management System** is an Android application developed as part of the BBT 3202 Lesson 6 Practical. It demonstrates how to build a reactive **Add Tenant** form in Android using modern Jetpack architectural concepts: **ConstraintLayout**, **View Binding**, and **Data Binding**.
-
----
-
-## ✨ Features Implemented
-
-1. **ConstraintLayout Form Interface**:
+1. ConstraintLayout Form Interface:
    - Title: `TENANT MANAGEMENT SYSTEM`
-   - Input fields for **Tenant Name**, **Phone Number** (`inputType="phone"`), and **Rent Paid** (`inputType="numberDecimal"`).
-   - **SAVE** Action Button.
+   - Input fields for Tenant Name, Phone Number and Rent Paid.
+   - SAVE Action Button.
 
-2. **View Binding Integration**:
+2. View Binding Integration:
    - Type-safe, null-safe access to layout views inside `MainActivity.kt` without `findViewById()`.
 
-3. **Data Binding & Kotlin Data Class**:
+3. Data Binding and Kotlin Data Class:
    - `Tenant.kt` data class representing a tenant entity with a custom formatted `summary()` method.
    - Declarative layout updates using Data Binding expressions (`@{tenant.summary()}`).
 
-4. **Input Validation**:
+4. Input Validation:
    - Error feedback on the Tenant Name field if submitted blank.
 
 ---
 
-## 📁 Project Structure
+Project Structure
 
 ```text
 TenantManagementSystem
