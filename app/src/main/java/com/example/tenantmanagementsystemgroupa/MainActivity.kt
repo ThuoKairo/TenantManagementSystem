@@ -1,47 +1,31 @@
 package com.example.tenantmanagementsystemgroupa
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.tenantmanagementsystemgroupa.ui.theme.TenantManagementSystemTheme
+import androidx.appcompat.app.AppCompatActivity
+import com.example.tenantmanagementsystemgroupa.databinding.ActivityMainBinding
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            TenantManagementSystemTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.saveButton.setOnClickListener {
+            val name = binding.tenantNameEditText.text.toString()
+            val phone = binding.phoneEditText.text.toString()
+            val rent = binding.rentEditText.text.toString()
+
+            if (name.isEmpty()) {
+                binding.tenantNameEditText.error = "Tenant name is required"
+                return@setOnClickListener
             }
+
+            val tenant = Tenant(name, phone, rent)
+            binding.tenant = tenant
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TenantManagementSystemTheme {
-        Greeting("Android")
     }
 }

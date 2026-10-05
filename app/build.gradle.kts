@@ -31,11 +31,16 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     buildFeatures {
+        viewBinding = true
+        dataBinding = true
         compose = true
     }
 }
 
 dependencies {
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.constraintlayout)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
