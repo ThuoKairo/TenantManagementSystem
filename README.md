@@ -44,13 +44,13 @@ TenantManagementSystem
 
 ---
 
-Tech Stack & Requirements
+Tech Stack and Requirements
 
 - Language: Kotlin
 - Build System: Gradle (Kotlin DSL `build.gradle.kts`)
 - Min SDK: 24 (Android 7.0)
 - Target SDK: 37
-- Libraries & Architecture:
+- Libraries and Architecture:
   - `androidx.appcompat:appcompat`
   - `androidx.constraintlayout:constraintlayout`
   - Android Jetpack View Binding & Data Binding
