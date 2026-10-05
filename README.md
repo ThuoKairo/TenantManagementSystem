@@ -44,23 +44,23 @@ TenantManagementSystem
 
 ---
 
-## 🛠️ Tech Stack & Requirements
+Tech Stack & Requirements
 
-- **Language:** Kotlin
-- **Build System:** Gradle (Kotlin DSL `build.gradle.kts`)
-- **Min SDK:** 24 (Android 7.0)
-- **Target SDK:** 37
-- **Libraries & Architecture:**
+- Language: Kotlin
+- Build System: Gradle (Kotlin DSL `build.gradle.kts`)
+- Min SDK: 24 (Android 7.0)
+- Target SDK: 37
+- Libraries & Architecture:
   - `androidx.appcompat:appcompat`
   - `androidx.constraintlayout:constraintlayout`
   - Android Jetpack View Binding & Data Binding
 
 ---
 
-## 🚀 How to Run the App
+How to Run the App
 
-1. Open the project folder in **Android Studio**.
+1. Open the project folder in Android Studio.
 2. Sync the project with Gradle files (`File → Sync Project with Gradle Files`).
-3. Start an **Android Virtual Device (AVD)** via `Tools → Device Manager` (e.g. Pixel 8).
-4. Click the green **Run ▶** button (or press `Shift + F10`).
-5. Enter a **Tenant Name**, **Phone Number**, and **Rent Paid**, then tap **SAVE** to view the generated summary!
+3. Start an Android Virtual Device (AVD) via `Tools → Device Manager` (e.g. Pixel 8).
+4. Click the green Run button (or press `Shift + F10`).
+5. Enter a Tenant Name, Phone Number and Rent Paid, then tap SAVE to view the generated summary.
