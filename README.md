@@ -1,33 +1,35 @@
-# Tenant Management System — Lesson 6 Practical
+# Tenant Management System — Navigation & Intents
 
 **Course:** BBT 3.2: Mobile Application Development  
 **Language:** Kotlin  
-**Topic:** Building the Tenant Management Screen (ConstraintLayout, View Binding, Data Binding)
+**Topic:** Navigation Practical 1 — Moving Between Screens with Explicit & Implicit Intents
 
 ---
 
 ## 📱 Project Overview
 
-The **Tenant Management System** is an Android application developed as part of the BBT 3202 Lesson 6 Practical. It demonstrates how to build a reactive **Add Tenant** form in Android using modern Jetpack architectural concepts: **ConstraintLayout**, **View Binding**, and **Data Binding**.
+The **Tenant Management System** is a multi-screen Android application built with **Kotlin**, **View Binding**, and **Data Binding**. This version implements screen navigation using **Explicit Intents** (Login ↔ Register ↔ Main/Add Tenant) and **Implicit Intents** (opening external web browser & phone dialer).
 
 ---
 
 ## ✨ Features Implemented
 
-1. **ConstraintLayout Form Interface**:
-   - Title: `TENANT MANAGEMENT SYSTEM`
-   - Input fields for **Tenant Name**, **Phone Number** (`inputType="phone"`), and **Rent Paid** (`inputType="numberDecimal"`).
-   - **SAVE** Action Button.
+1. **LoginActivity (Launcher Screen)**:
+   - Primary entry point configured as `LAUNCHER` in `AndroidManifest.xml`.
+   - Explicit Intent navigation to `MainActivity` upon login.
+   - Explicit Intent navigation to `RegisterActivity`.
+   - Implicit Intent (`ACTION_VIEW`) opening the web browser to Strathmore University (`https://www.strathmore.edu`).
+   - Receives registered email passed from `RegisterActivity` via `getStringExtra("EMAIL")`.
 
-2. **View Binding Integration**:
-   - Type-safe, null-safe access to layout views inside `MainActivity.kt` without `findViewById()`.
+2. **RegisterActivity**:
+   - Account creation form (`FullName`, `Email`, `Password`).
+   - Passes registered email back to `LoginActivity` using `putExtra("EMAIL", email)`.
+   - Uses `Intent.FLAG_ACTIVITY_CLEAR_TOP` to return to the existing `LoginActivity` instance.
 
-3. **Data Binding & Kotlin Data Class**:
-   - `Tenant.kt` data class representing a tenant entity with a custom formatted `summary()` method.
-   - Declarative layout updates using Data Binding expressions (`@{tenant.summary()}`).
-
-4. **Input Validation**:
-   - Error feedback on the Tenant Name field if submitted blank.
+3. **MainActivity (Add Tenant Screen)**:
+   - Data Binding layout (`activity_main.xml`) with `Tenant` data object.
+   - Saves tenant details and renders summary reactively using `@{tenant.summary()}`.
+   - **CALL TENANT Button**: Uses an implicit Intent (`ACTION_DIAL`, `Uri.parse("tel:${tenant.phone}")`) to open the system phone dialer with the saved tenant's phone number.
 
 ---
 
@@ -38,37 +40,50 @@ TenantManagementSystem
 │
 └── app
     │
+    ├── manifests/
+    │   └── AndroidManifest.xml   # Defines LoginActivity (Launcher), RegisterActivity, MainActivity
+    │
     ├── src/main/java/com/example/tenantmanagementsystemgroupa/
-    │   ├── MainActivity.kt   # Inflates layout, handles SAVE click, binds Tenant data
-    │   └── Tenant.kt         # Kotlin data class holding tenant properties & summary()
+    │   ├── LoginActivity.kt     # Handles login, website link, and navigation
+    │   ├── RegisterActivity.kt  # Handles registration and passing email extra
+    │   ├── MainActivity.kt      # Add Tenant screen with dialer functionality
+    │   └── Tenant.kt            # Data class representing tenant entity
     │
     └── src/main/res/
         ├── layout/
-        │   └── activity_main.xml # ConstraintLayout wrapped in <layout> & <data> tags
+        │   ├── activity_login.xml    # Login ConstraintLayout UI
+        │   ├── activity_register.xml # Register ConstraintLayout UI
+        │   └── activity_main.xml     # Data Binding Add Tenant UI
         └── values/
-            ├── strings.xml       # Centralized string resources
-            └── themes.xml        # AppCompat theme definition
+            └── strings.xml           # Centralized string resources
 ```
 
 ---
 
-## 🛠️ Tech Stack & Requirements
+## 🚀 App Navigation Flow
 
-- **Language:** Kotlin
-- **Build System:** Gradle (Kotlin DSL `build.gradle.kts`)
-- **Min SDK:** 24 (Android 7.0)
-- **Target SDK:** 37
-- **Libraries & Architecture:**
-  - `androidx.appcompat:appcompat`
-  - `androidx.constraintlayout:constraintlayout`
-  - Android Jetpack View Binding & Data Binding
+```text
+               ┌──────────────┐
+               │   Browser    │  (Implicit Intent: ACTION_VIEW)
+               └──────────────┘
+                      ▲
+                      │
+   REGISTER  ◀──────▶ LOGIN (Launcher)
+   Activity           │
+                      ▼  (Explicit Intent)
+               ┌──────────────┐        ┌──────────────┐
+               │  ADD TENANT  │──────▶ │ Phone Dialer │  (Implicit Intent: ACTION_DIAL)
+               │ (MainActivity)│        └──────────────┘
+               └──────────────┘
+```
 
 ---
 
-## 🚀 How to Run the App
+## 🛠️ How to Test the Flow
 
-1. Open the project folder in **Android Studio**.
-2. Sync the project with Gradle files (`File → Sync Project with Gradle Files`).
-3. Start an **Android Virtual Device (AVD)** via `Tools → Device Manager` (e.g. Pixel 8).
-4. Click the green **Run ▶** button (or press `Shift + F10`).
-5. Enter a **Tenant Name**, **Phone Number**, and **Rent Paid**, then tap **SAVE** to view the generated summary!
+1. Launch the app on your emulator — **`LoginActivity`** will open first.
+2. Tap **`Need help? Visit our website`** to open the web browser to Strathmore University.
+3. Tap **`Don't have an account? Register`**, fill in the form, and tap **`REGISTER`**.
+4. You will return to `LoginActivity` with your email pre-filled!
+5. Enter any password and tap **`LOGIN`** to open the **`Add Tenant`** screen.
+6. Fill in Tenant details, tap **`SAVE`**, then tap **`CALL TENANT`** to open the phone dialer with the tenant's number.

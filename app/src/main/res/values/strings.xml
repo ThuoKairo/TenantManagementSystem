@@ -8,4 +8,17 @@
     <string name="hint_rent_paid">Enter Rent Paid</string>
     <string name="button_save">SAVE</string>
     <string name="hint_saved_tenant">Saved tenant will appear here</string>
+
+    <string name="login_subtitle">Log in to continue</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="button_login">LOGIN</string>
+    <string name="register_link">Don\'t have an account? Register</string>
+    <string name="help_website">Need help? Visit our website</string>
+
+    <string name="title_create_account">Create an account</string>
+    <string name="hint_full_name">Full name</string>
+    <string name="button_register">REGISTER</string>
+    <string name="login_link">Already have an account? Log in</string>
+    <string name="button_call_tenant">CALL TENANT</string>
 </resources>
