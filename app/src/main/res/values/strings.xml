@@ -21,4 +21,11 @@
     <string name="button_register">REGISTER</string>
     <string name="login_link">Already have an account? Log in</string>
     <string name="button_call_tenant">CALL TENANT</string>
+
+    <string name="welcome_back">Welcome back</string>
+    <string name="property_overview">Here is an overview of your property</string>
+    <string name="button_add_tenant">ADD TENANT</string>
+    <string name="button_view_tenants">VIEW TENANTS</string>
+    <string name="label_just_added">Just added</string>
+    <string name="label_all_tenants">All tenants</string>
 </resources>

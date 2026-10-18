@@ -1,89 +1,82 @@
-# Tenant Management System — Navigation & Intents
+# Tenant Management System — Navigation, Lifecycles & Fragments
 
 **Course:** BBT 3.2: Mobile Application Development  
 **Language:** Kotlin  
-**Topic:** Navigation Practical 1 — Moving Between Screens with Explicit & Implicit Intents
+**Topic:** Navigation Practical 2 — Activity Lifecycles, State Persistence & Navigation Fragments
 
 ---
 
 ## 📱 Project Overview
 
-The **Tenant Management System** is a multi-screen Android application built with **Kotlin**, **View Binding**, and **Data Binding**. This version implements screen navigation using **Explicit Intents** (Login ↔ Register ↔ Main/Add Tenant) and **Implicit Intents** (opening external web browser & phone dialer).
+The **Tenant Management System** is a multi-screen Android application developed using **Kotlin**, **Jetpack Navigation**, **View Binding**, and **Data Binding**. This version incorporates:
+- Activity lifecycle logging & `onSaveInstanceState` state persistence across screen rotations.
+- Safe Args & Navigation Component configuration.
+- Shared data model (`Tenant` implementing `Serializable`) and `TenantRepository` object.
+- Fragment screens (`DashboardFragment`, `AddTenantFragment`, `ViewTenantsFragment`) mapped inside a Navigation Graph (`nav_graph.xml`).
 
 ---
 
 ## ✨ Features Implemented
 
-1. **LoginActivity (Launcher Screen)**:
-   - Primary entry point configured as `LAUNCHER` in `AndroidManifest.xml`.
-   - Explicit Intent navigation to `MainActivity` upon login.
-   - Explicit Intent navigation to `RegisterActivity`.
-   - Implicit Intent (`ACTION_VIEW`) opening the web browser to Strathmore University (`https://www.strathmore.edu`).
-   - Receives registered email passed from `RegisterActivity` via `getStringExtra("EMAIL")`.
+1. **Activity Lifecycle & State Persistence**:
+   - Added `Log.d("TENANT_LIFECYCLE", ...)` to all 7 lifecycle callbacks in `MainActivity.kt` (`onCreate`, `onStart`, `onResume`, `onPause`, `onStop`, `onRestart`, `onDestroy`).
+   - Implemented `onSaveInstanceState(outState: Bundle)` and state restoration in `onCreate` to preserve tenant data during screen rotations.
 
-2. **RegisterActivity**:
-   - Account creation form (`FullName`, `Email`, `Password`).
-   - Passes registered email back to `LoginActivity` using `putExtra("EMAIL", email)`.
-   - Uses `Intent.FLAG_ACTIVITY_CLEAR_TOP` to return to the existing `LoginActivity` instance.
+2. **Navigation Component & Safe Args**:
+   - Added `androidx.navigation.safeargs.kotlin` plugin (v2.9.8).
+   - Added `navigation-fragment-ktx` and `navigation-ui-ktx` dependencies.
 
-3. **MainActivity (Add Tenant Screen)**:
-   - Data Binding layout (`activity_main.xml`) with `Tenant` data object.
-   - Saves tenant details and renders summary reactively using `@{tenant.summary()}`.
-   - **CALL TENANT Button**: Uses an implicit Intent (`ACTION_DIAL`, `Uri.parse("tel:${tenant.phone}")`) to open the system phone dialer with the saved tenant's phone number.
+3. **Shared Data Layer**:
+   - `Tenant.kt`: Made `Tenant` class implement `java.io.Serializable` for Safe Args passing.
+   - `TenantRepository.kt`: Kotlin `object` maintaining an in-memory list of tenants (`mutableListOf<Tenant>()`) and total rent calculations.
+
+4. **Fragment Screens**:
+   - **`DashboardFragment`**: Property overview displaying total tenant count and total formatted rent (`KSh %,.0f`).
+   - **`AddTenantFragment`**: Form screen for collecting new tenant details.
+   - **`ViewTenantsFragment`**: Displays list of added tenants and optional "Just added" highlight using Data Binding and `Group` visibility.
+
+5. **Navigation Graph (`nav_graph.xml`)**:
+   - Configured `dashboardFragment` as `startDestination`.
+   - Defined navigation actions connecting Dashboard ➔ Add Tenant ➔ View Tenants.
+   - Configured nullable `newTenant` argument (`app:argType="Tenant"`) on `viewTenantsFragment`.
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Architecture
 
 ```text
 TenantManagementSystem
 │
 └── app
     │
-    ├── manifests/
-    │   └── AndroidManifest.xml   # Defines LoginActivity (Launcher), RegisterActivity, MainActivity
-    │
     ├── src/main/java/com/example/tenantmanagementsystemgroupa/
-    │   ├── LoginActivity.kt     # Handles login, website link, and navigation
-    │   ├── RegisterActivity.kt  # Handles registration and passing email extra
-    │   ├── MainActivity.kt      # Add Tenant screen with dialer functionality
-    │   └── Tenant.kt            # Data class representing tenant entity
+    │   ├── LoginActivity.kt        # Login screen & intent handling
+    │   ├── RegisterActivity.kt     # Account creation screen
+    │   ├── MainActivity.kt         # Lifecycle logs & state restoration
+    │   ├── DashboardFragment.kt    # Dashboard metric overview
+    │   ├── AddTenantFragment.kt    # Add tenant form fragment
+    │   ├── ViewTenantsFragment.kt  # Tenant list fragment
+    │   ├── Tenant.kt               # Serializable data class
+    │   └── TenantRepository.kt     # In-memory tenant repository
     │
     └── src/main/res/
         ├── layout/
-        │   ├── activity_login.xml    # Login ConstraintLayout UI
-        │   ├── activity_register.xml # Register ConstraintLayout UI
-        │   └── activity_main.xml     # Data Binding Add Tenant UI
-        └── values/
-            └── strings.xml           # Centralized string resources
+        │   ├── activity_login.xml
+        │   ├── activity_register.xml
+        │   ├── activity_main.xml
+        │   ├── fragment_dashboard.xml
+        │   ├── fragment_add_tenant.xml
+        │   └── fragment_view_tenants.xml
+        │
+        └── navigation/
+            └── nav_graph.xml      # Navigation graph destinations & actions
 ```
 
 ---
 
-## 🚀 App Navigation Flow
+## 🚀 How to Run & Verify
 
-```text
-               ┌──────────────┐
-               │   Browser    │  (Implicit Intent: ACTION_VIEW)
-               └──────────────┘
-                      ▲
-                      │
-   REGISTER  ◀──────▶ LOGIN (Launcher)
-   Activity           │
-                      ▼  (Explicit Intent)
-               ┌──────────────┐        ┌──────────────┐
-               │  ADD TENANT  │──────▶ │ Phone Dialer │  (Implicit Intent: ACTION_DIAL)
-               │ (MainActivity)│        └──────────────┘
-               └──────────────┘
-```
-
----
-
-## 🛠️ How to Test the Flow
-
-1. Launch the app on your emulator — **`LoginActivity`** will open first.
-2. Tap **`Need help? Visit our website`** to open the web browser to Strathmore University.
-3. Tap **`Don't have an account? Register`**, fill in the form, and tap **`REGISTER`**.
-4. You will return to `LoginActivity` with your email pre-filled!
-5. Enter any password and tap **`LOGIN`** to open the **`Add Tenant`** screen.
-6. Fill in Tenant details, tap **`SAVE`**, then tap **`CALL TENANT`** to open the phone dialer with the tenant's number.
+1. Launch the app on your emulator — `LoginActivity` will open first.
+2. Log in to navigate to `MainActivity`.
+3. In Logcat (`tag:TENANT_LIFECYCLE`), observe lifecycle transition logs.
+4. Rotate the emulator to verify that saved tenant details persist across screen rotation.
