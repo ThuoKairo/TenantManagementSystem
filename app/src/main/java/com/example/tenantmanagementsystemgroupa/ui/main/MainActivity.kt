@@ -1,4 +1,4 @@
-package com.example.tenantmanagementsystemgroupa
+package com.example.tenantmanagementsystemgroupa.ui.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,8 +13,10 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.tenantmanagementsystemgroupa.R
 import com.example.tenantmanagementsystemgroupa.databinding.ActivityMainBinding
 import com.example.tenantmanagementsystemgroupa.databinding.NavHeaderBinding
+import com.example.tenantmanagementsystemgroupa.ui.auth.LoginActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,26 +31,21 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 1. Use our Toolbar as the App Bar
         setSupportActionBar(binding.toolbar)
 
-        // 2. Get the NavController from the NavHost
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
         navController = navHostFragment.navController
 
-        // 3. Top-level destinations + the drawer
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.dashboardFragment, R.id.addTenantFragment, R.id.viewTenantsFragment),
             binding.drawerLayout
         )
 
-        // 4. Connect the App Bar and the drawer to navigation
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.navView.setupWithNavController(navController)
 
-        // 5. Show the user's email in the drawer header
         val email = intent.getStringExtra("EMAIL")
         val headerBinding = NavHeaderBinding.bind(binding.navView.getHeaderView(0))
         headerBinding.headerEmailTextView.text = email ?: "Signed in"
