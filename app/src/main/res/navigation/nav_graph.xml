@@ -48,7 +48,7 @@
 
         <argument
             android:name="newTenant"
-            app:argType="com.example.tenantmanagementsystemgroupa.data.model.Tenant"
+            app:argType="com.example.tenantmanagementsystemgroupa.Tenant"
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
