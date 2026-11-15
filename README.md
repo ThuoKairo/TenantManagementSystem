@@ -20,9 +20,9 @@ Screens → TenantViewModel (LiveData) → TenantRepository → Room
 ## Team
 | Stage | Member | Admission No. | Pull request |
 |---|---|---|---|
-| 1 Lead | Thuo Kairo | 123456 | [Commit be8609f](https://github.com/ThuoKairo/TenantManagementSystem/commit/be8609f) |
-| 2 ViewModel | Thuo Kairo | 123456 | [PR #2](https://github.com/ThuoKairo/TenantManagementSystem/pull/2) |
-| 3 Room | Thuo Kairo | 123456 | [PR #3](https://github.com/ThuoKairo/TenantManagementSystem/pull/3) |
-| 4 Screens | Thuo Kairo | 123456 | [PR #2](https://github.com/ThuoKairo/TenantManagementSystem/pull/2) |
-| 5 Data integration | Thuo Kairo | 123456 | [PR #4](https://github.com/ThuoKairo/TenantManagementSystem/pull/4) |
-| 6 Release | Thuo Kairo | 123456 | [PR #5](https://github.com/ThuoKairo/TenantManagementSystem/pull/5) |
+| 1 Lead | Thuo Kairo | 189797 | [Commit be8609f](https://github.com/ThuoKairo/TenantManagementSystem/commit/be8609f) |
+| 2 ViewModel | Kevin Mutuma | 172638 | [PR #2](https://github.com/ThuoKairo/TenantManagementSystem/pull/2) |
+| 3 Room | Kwee Odeny | 182654 | [PR #3](https://github.com/ThuoKairo/TenantManagementSystem/pull/3) |
+| 4 Screens | Lydia Ochalla | 193001 | [PR #2](https://github.com/ThuoKairo/TenantManagementSystem/pull/2) |
+| 5 Data integration | Bradley Kanana | 190068 | [PR #4](https://github.com/ThuoKairo/TenantManagementSystem/pull/4) |
+| 6 Release | Thuo Kairo | 189797 | [PR #5](https://github.com/ThuoKairo/TenantManagementSystem/pull/5) |
