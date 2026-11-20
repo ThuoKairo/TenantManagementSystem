@@ -7,8 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.example.tenantmanagementsystemgroupa.Tenant
-import com.example.tenantmanagementsystemgroupa.data.local.TenantDatabase
+import com.example.tenantmanagementsystemgroupa.data.model.Tenant
 import com.example.tenantmanagementsystemgroupa.data.repository.TenantRepository
 import kotlinx.coroutines.launch
 
@@ -17,7 +16,12 @@ class TenantViewModel(application: Application) :
 
     private val repository: TenantRepository
 
-    val tenants: LiveData<List<Tenant>>
+    private val _apiStatus = MutableLiveData<String>()
+    val apiStatus: LiveData<String> = _apiStatus
+
+    val tenantCountText: LiveData<String> = tenants.map { list ->
+        "Tenants\n${list.size}"
+    }
 
     val tenantCountText: LiveData<String>
 
@@ -64,13 +68,21 @@ class TenantViewModel(application: Application) :
         Log.d("TENANT_LIFECYCLE", "TenantViewModel: created")
     }
 
-    // Add a tenant to the database
-    fun addTenant(
-        name: String,
-        phone: String,
-        rent: String
-    ): Tenant? {
+    init {
+        Log.d("TENANT_LIFECYCLE", "TenantViewModel: created")
+        syncTenantsFromApi()
+    }
 
+    fun syncTenantsFromApi() {
+        viewModelScope.launch {
+            val success = TenantRepository.fetchTenantsFromApi()
+            _tenants.value = TenantRepository.tenants.toList()
+            _apiStatus.value = if (success) "Synced with API" else "Offline mode"
+            Log.d("TENANT_API", "Sync result: $success, count=${TenantRepository.tenants.size}")
+        }
+    }
+
+    fun addTenant(name: String, phone: String, rent: String): Tenant? {
         val cleanName = name.trim()
         val cleanPhone = phone.trim()
         val cleanRent = rent.trim()
@@ -84,24 +96,16 @@ class TenantViewModel(application: Application) :
             return null
         }
 
-        // Create the tenant
-        val tenant = Tenant(
-            cleanName,
-            cleanPhone,
-            cleanRent
-        )
+        val tenant = Tenant(cleanName, cleanPhone, cleanRent)
 
-        // Save tenant using a coroutine
         viewModelScope.launch {
-            repository.addTenant(tenant)
+            val posted = TenantRepository.postTenantToApi(tenant)
+            _tenants.value = TenantRepository.tenants.toList()
+            _apiStatus.value = if (posted) "Saved to API" else "Saved locally (offline)"
+            Log.d("TENANT_API", "POST tenant result: $posted")
         }
 
         return tenant
-    }
-
-    init {
-        // Lifecycle logging
-        Log.d("TENANT_LIFECYCLE", "TenantViewModel: created")
     }
 
     override fun onCleared() {

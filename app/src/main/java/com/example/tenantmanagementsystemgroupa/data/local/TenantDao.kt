@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.tenantmanagementsystemgroupa.Tenant
 
 // @Dao: the things we can do with the table. Room writes the code inside
 @Dao

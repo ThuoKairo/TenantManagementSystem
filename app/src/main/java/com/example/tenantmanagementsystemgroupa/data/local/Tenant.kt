@@ -1,21 +1,24 @@
-package com.example.tenantmanagementsystemgroupa
+package com.example.tenantmanagementsystemgroupa.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.io.Serializable
+import com.google.gson.annotations.SerializedName
 
-// @Entity: every Tenant is stored as one ROW in the "tenants" table
 @Entity(tableName = "tenants")
 data class Tenant(
-    val name: String,
-    val phone: String,
-    val rent: String,
-
-    // Unique auto-incrementing ID for each row (0 means not saved yet)
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0
-) : Serializable {
-    fun summary(): String {
-        return "Tenant: $name\nPhone: $phone\nRent: KSh $rent"
-    }
-}
+    @SerializedName("id")
+    val id: Int = 0,
+
+    @SerializedName("name")
+    val name: String,
+
+    @SerializedName("room_number")
+    val roomNumber: String,
+
+    @SerializedName("rent_amount")
+    val rentAmount: Double,
+
+    @SerializedName("is_paid")
+    val isPaid: Boolean
+)
