@@ -3,16 +3,17 @@ package com.example.tenantmanagementsystemgroupa.data.repository
 import com.example.tenantmanagementsystemgroupa.data.model.Tenant
 import com.example.tenantmanagementsystemgroupa.data.remote.RetrofitClient
 
-object TenantRepository {
+class TenantRepository(
+    private val tenantDao: TenantDao
+) {
 
-    val tenants = mutableListOf<Tenant>()
+    // Get all tenants from the Room database
+    val tenants: LiveData<List<Tenant>> =
+        tenantDao.getAllTenants()
 
-    fun addTenant(tenant: Tenant) {
-        tenants.add(tenant)
-    }
-
-    fun totalRent(): Double {
-        return tenants.sumOf { it.rent.toDoubleOrNull() ?: 0.0 }
+    // Save a tenant in the Room database
+    suspend fun addTenant(tenant: Tenant) {
+        tenantDao.insertTenant(tenant)
     }
 
     // Fetch all tenants from the remote API and sync the local list

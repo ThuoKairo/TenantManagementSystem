@@ -1,19 +1,20 @@
+
 package com.example.tenantmanagementsystemgroupa.ui.viewmodel
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.tenantmanagementsystemgroupa.data.model.Tenant
 import com.example.tenantmanagementsystemgroupa.data.repository.TenantRepository
 import kotlinx.coroutines.launch
 
-class TenantViewModel : ViewModel() {
+class TenantViewModel(application: Application) :
+    AndroidViewModel(application) {
 
-    private val _tenants = MutableLiveData<List<Tenant>>(TenantRepository.tenants.toList())
-    val tenants: LiveData<List<Tenant>> = _tenants
+    private val repository: TenantRepository
 
     private val _apiStatus = MutableLiveData<String>()
     val apiStatus: LiveData<String> = _apiStatus
@@ -22,17 +23,49 @@ class TenantViewModel : ViewModel() {
         "Tenants\n${list.size}"
     }
 
-    val totalRentText: LiveData<String> = tenants.map { list ->
-        val total = list.sumOf { it.rent.toDoubleOrNull() ?: 0.0 }
-        "Total rent\nKSh %,.0f".format(total)
-    }
+    val tenantCountText: LiveData<String>
 
-    val allTenantsText: LiveData<String> = tenants.map { list ->
-        if (list.isEmpty()) {
-            "No tenants yet. Add one from the Dashboard."
-        } else {
-            list.joinToString("\n\n") { it.summary() }
+    val totalRentText: LiveData<String>
+
+    val allTenantsText: LiveData<String>
+
+    init {
+        // Get the DAO from the Room database
+        val tenantDao =
+            TenantDatabase.getDatabase(application).tenantDao()
+
+        // Create the Repository
+        repository = TenantRepository(tenantDao)
+
+        // Get tenants from the Repository
+        tenants = repository.tenants
+
+        // Calculate the number of tenants
+        tenantCountText = tenants.map { list ->
+            "Tenants\n${list.size}"
         }
+
+        // Calculate total rent
+        totalRentText = tenants.map { list ->
+            val total = list.sumOf {
+                it.rent.toDoubleOrNull() ?: 0.0
+            }
+
+            "Total rent\nKSh %,.0f".format(total)
+        }
+
+        // Display all tenants
+        allTenantsText = tenants.map { list ->
+            if (list.isEmpty()) {
+                "No tenants yet. Add one from the Dashboard."
+            } else {
+                list.joinToString("\n\n") {
+                    it.summary()
+                }
+            }
+        }
+
+        Log.d("TENANT_LIFECYCLE", "TenantViewModel: created")
     }
 
     init {
@@ -54,7 +87,12 @@ class TenantViewModel : ViewModel() {
         val cleanPhone = phone.trim()
         val cleanRent = rent.trim()
 
-        if (cleanName.isEmpty() || cleanPhone.isEmpty() || cleanRent.isEmpty()) {
+        // Validate the entered information
+        if (
+            cleanName.isEmpty() ||
+            cleanPhone.isEmpty() ||
+            cleanRent.isEmpty()
+        ) {
             return null
         }
 

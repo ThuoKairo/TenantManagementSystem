@@ -21,8 +21,18 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:/Users/thuok/Documents/keys/tenant-release.jks")
+            storePassword = "TenantPassword123!"
+            keyAlias = "tenant"
+            keyPassword = "TenantPassword123!"
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             optimization {
                 enable = false
             }
@@ -75,4 +85,5 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
+}
 }
